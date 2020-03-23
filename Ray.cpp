@@ -15,26 +15,28 @@ bool Ray::isHit(sf::Vertex p)
 
 Ray::Ray(sf::Vector2f pos, double direction) : area(sf::Vector2f(pos.x * 2, pos.y * 2))
 {
-    dir.x = (float)cos(direction * (3.14159 / 180.0));
-    dir.y = (float)sin(-direction * (3.14159 / 180.0));
-
-    points.push_back(sf::Vertex(pos, sf::Color::Red));
-    points.push_back(sf::Vertex(pos, sf::Color::Red));
+    points.vert.push_back(sf::Vertex(pos, sf::Color::Red));
+    points.dir.push_back(sf::Vector2f((float)cos(direction * (3.14159 / 180.0)), (float)sin(-direction * (3.14159 / 180.0))));
+    points.vert.push_back(sf::Vertex(pos, sf::Color::Red));
+    points.dir.push_back(sf::Vector2f((float)cos(direction * (3.14159 / 180.0)), (float)sin(-direction * (3.14159 / 180.0))));
 }
 
 void Ray::update()
 {
-    if (magnitude(points[0], points[1]) < 100.f)
+    for (size_t i = 0; i < points.vert.size() - 1; i++)
     {
-        points[1].position.x += dir.x * speed;
-        points[1].position.y += dir.y * speed;
-    }
-    else
-    {
-        for (size_t i = 0; i < points.size(); i++)
+        if (magnitude(points.vert[i], points.vert[i + 1]) < 100.f)
         {
-            points[i].position.x += dir.x * speed;
-            points[i].position.y += dir.y * speed;
+            points.vert[i + 1].position.x += points.dir[i + 1].x * speed;
+            points.vert[i + 1].position.y += points.dir[i + 1].y * speed;
+        }
+        else
+        {
+            for (size_t i = 0; i < points.vert.size(); i++)
+            {
+                points.vert[i].position.x += points.dir[i].x * speed;
+                points.vert[i].position.y += points.dir[i].y * speed;
+            }
         }
     }
 
@@ -49,7 +51,7 @@ void Ray::update()
 
 std::vector<sf::Vertex> Ray::getVertex() const
 {
-    return points;
+    return points.vert;
 }
 
 Ray::~Ray() {}
