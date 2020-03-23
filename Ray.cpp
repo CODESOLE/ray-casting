@@ -5,9 +5,9 @@ float Ray::magnitude(const sf::Vertex &p0, const sf::Vertex &p1)
     return sqrt((p0.position.x - p1.position.x) * (p0.position.x - p1.position.x) + (p0.position.y - p1.position.y) * (p0.position.y - p1.position.y));
 }
 
-bool Ray::isHit(sf::Vertex p)
+bool Ray::isHit(sf::Vertex &p)
 {
-    if (!(0 < p.position.x < area.x) || !(0 < p.position.y < area.y))
+    if (!(0 < p.position.x) || !(p.position.x < area.x) || !(0 < p.position.y) || !(p.position.y < area.y))
         return true;
     else
         return false;
@@ -40,13 +40,15 @@ void Ray::update()
         }
     }
 
-    /*  for (size_t i = 0; i < points.size(); i++)
+    for (size_t i = 0; i < points.vert.size(); i++)
+    {
+        if (isHit(points.vert[i]))
         {
-            if (isHit(points[i]))
-            {
-                points.push_back(sf::Vertex(points[i].position, sf::Color::Red));
-            }
-        } */
+            std::cout << "hitted";
+            points.vert.push_back(sf::Vertex(points.vert[i].position, sf::Color::Red));
+            points.dir.push_back(sf::Vector2f(points.dir[i].x, -points.dir[i].y));
+        }
+    }
 }
 
 std::vector<sf::Vertex> Ray::getVertex() const

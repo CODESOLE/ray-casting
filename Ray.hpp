@@ -19,7 +19,7 @@ private:
 
     float magnitude(const sf::Vertex &p0, const sf::Vertex &p1);
 
-    bool isHit(sf::Vertex p);
+    bool isHit(sf::Vertex &p);
 
 public:
     Ray(sf::Vector2f pos, double direction);
