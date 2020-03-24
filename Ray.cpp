@@ -43,10 +43,11 @@ void Ray::update()
     {
         isHit(points, i);
 
-        if (points[i]->ishit)
+        if (points[i]->ishit && !points[i]->added)
         {
             std::cout << "hitted";
             points.push_back(new point(sf::Vertex(sf::Vector2f(points[i]->vert.position.x + 2, points[i]->vert.position.y + 2), sf::Color::Red), sf::Vector2f(points[i]->dir.x, -points[i]->dir.y), false));
+            points[i]->added = true;
         }
     }
 }

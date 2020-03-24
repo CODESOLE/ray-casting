@@ -8,8 +8,8 @@ struct point
 {
     sf::Vertex vert;
     sf::Vector2f dir;
-    bool ishit;
-    point(sf::Vertex v, sf::Vector2f vec, bool ish) : vert(v), dir(vec), ishit(ish) {}
+    bool ishit, added;
+    point(sf::Vertex v, sf::Vector2f vec, bool ish, bool add = false) : vert(v), dir(vec), ishit(ish), added(add) {}
 };
 
 class Ray
