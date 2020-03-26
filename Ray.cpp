@@ -15,10 +15,28 @@ float Ray::angle(VECTOR2 v1, VECTOR2 v2)
     return acos((v1.dot(v2)) / (v1.mag() * v2.mag())) * 180.f / 3.1415926f;
 }
 
-void Ray::isHit(std::vector<point *> &p, unsigned int index)
+void Ray::isHit(std::vector<point *> &p, const unsigned int &index)
 {
-    if (!(0 < p[index]->vert.position.x) || !(p[index]->vert.position.x < area.x) || !(0 < p[index]->vert.position.y) || !(p[index]->vert.position.y < area.y))
+    if (!(0 < p[index]->vert.position.x))
+    {
         p[index]->ishit = true;
+        p[index]->sideHitted = LEFT;
+    }
+    else if (!(p[index]->vert.position.x < area.x))
+    {
+        p[index]->ishit = true;
+        p[index]->sideHitted = RIGHT;
+    }
+    else if (!(0 < p[index]->vert.position.y))
+    {
+        p[index]->ishit = true;
+        p[index]->sideHitted = UP;
+    }
+    else if (!(p[index]->vert.position.y < area.y))
+    {
+        p[index]->ishit = true;
+        p[index]->sideHitted = BOTTOM;
+    }
 }
 
 Ray::Ray(sf::Vector2f pos, double direction) : area(sf::Vector2f(pos.x * 2, pos.y * 2))
@@ -31,6 +49,7 @@ void Ray::update()
 {
     for (size_t i = 0; i < points.size() - 1; i++)
     {
+
         if (magnitude(points[i]->vert, points[i + 1]->vert) < 100.f)
         {
             points[i + 1]->vert.position.x += points[i + 1]->dir.x * speed;
@@ -46,6 +65,9 @@ void Ray::update()
                 points[i]->vert.position.y += points[i]->dir.y * speed;
             }
         }
+
+        if (magnitude(points[i]->vert, points[i + 1]->vert) <= 0.f)
+            points.pop_back();
     }
 
     for (size_t i = 0; i < points.size(); i++)
@@ -54,10 +76,31 @@ void Ray::update()
 
         if (points[i]->ishit && !points[i]->added)
         {
-            std::cout << "hitted";
+
+            //std::cout << "hitted";
+
+            if (points[i]->sideHitted == UP)
+            {
+                points.push_back(new point(sf::Vertex(sf::Vector2f(points[i]->vert.position.x + 2, points[i]->vert.position.y + 2), sf::Color::Red), sf::Vector2f(points[i]->dir.x, -points[i]->dir.y), false));
+                points[i]->added = true;
+            }
+            else if (points[i]->sideHitted == BOTTOM)
+            {
+                points.push_back(new point(sf::Vertex(sf::Vector2f(points[i]->vert.position.x - 2, points[i]->vert.position.y - 2), sf::Color::Red), sf::Vector2f(points[i]->dir.x, -points[i]->dir.y), false));
+                points[i]->added = true;
+            }
+            else if (points[i]->sideHitted == LEFT)
+            {
+                points.push_back(new point(sf::Vertex(sf::Vector2f(points[i]->vert.position.x + 2, points[i]->vert.position.y + 2), sf::Color::Red), sf::Vector2f(-points[i]->dir.x, points[i]->dir.y), false));
+                points[i]->added = true;
+            }
+            else if (points[i]->sideHitted == RIGHT)
+            {
+                points.push_back(new point(sf::Vertex(sf::Vector2f(points[i]->vert.position.x - 2, points[i]->vert.position.y - 2), sf::Color::Red), sf::Vector2f(-points[i]->dir.x, points[i]->dir.y), false));
+                points[i]->added = true;
+            }
+
             std::cout << angle(VECTOR2(points[i]->dir.x, points[i]->dir.y), vec::UP) << std::endl;
-            points.push_back(new point(sf::Vertex(sf::Vector2f(points[i]->vert.position.x + 2, points[i]->vert.position.y + 2), sf::Color::Red), sf::Vector2f(points[i]->dir.x, -points[i]->dir.y), false));
-            points[i]->added = true;
         }
     }
 }

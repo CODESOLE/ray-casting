@@ -3,7 +3,7 @@
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1000, 500), "SFML works!");
-    Ray r1(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2), 45.0);
+    Ray r1(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 2), 10.0);
 
     while (window.isOpen())
     {

@@ -31,5 +31,8 @@
 *.out
 *.app
 
+#formatter
+.clang-format
+
 #vscode config files
 .vscode/
